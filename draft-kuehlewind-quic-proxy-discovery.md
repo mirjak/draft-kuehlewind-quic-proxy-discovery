@@ -118,7 +118,7 @@ different Lifetime values, multiple options can be used.
              :  IPv4 Addresses of QUIC-based Proxy Servers   :
              |                                               |
              +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-~~~~
+~~~~~
 {: #fig-dhcpv4-option
    title="IPv4 Proxy Discovery DHCP option format"}
    
@@ -162,7 +162,7 @@ is determined by the Length field. That is, the number of addresses is equal to
      |                                                               |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~~
-{: #fig-dchpv6-option
+{: #fig-dhcpv6-option
    title="IPv4 Proxy Discovery DHCP option format"}
    
 option-code:
