@@ -30,7 +30,8 @@ normative:
     RFC4861:
     RFC2131:
     RFC8415:
-    rfc6763
+    rfc6763:
+    rfc6762:
     rfc1035:
     rfc2782:
 
@@ -93,7 +94,7 @@ that are either located in the local network, e.g. home or enterprise network,
 in the access network, or somewhere else on the Internet usually close to the
 traget server or even in the same network as the target server.
 
-[At a note about mobile networks?]
+[Add a note about mobile networks?]
 
 
 # Using DHCP for Local Discovery 
@@ -103,6 +104,10 @@ networks, as well DHCPv6 {{RFC8415}} in IPv6 networks. New options for both prot
 specified below. The option can contain one or more IP addresses of QUIC-based proxy
 servers. All of the addresses share the same Lifetime value. If it is desirable to have
 different Lifetime values, multiple options can be used.
+
+[TODO: decide whether we need a lifetime here. the current intention is to return IP address(es), this means there might not be a need for name resolution. In that case the lifetime can help indicating the validity period of the information. In case the DHCP options returns domain names then a resource record for the name reslution will contain TTL value per record. hecne, in that case the lifetime information will be reduncdant.]
+
+[TODO: will the DHCP option only include IP addresses?]
 
 ~~~~~
                     0                             1
@@ -271,25 +276,31 @@ provided, the PvD JSON configuration file retrievable at the URI with the format
 of a type of service. To get a list of names of the available instance for a certain
 service a client requests records of type "PTR" (pointer from one name to another in the
 DNS namespace {{RFC1035}} for a name containing the service and domain.
-The result of this PTR lookup is a set of zero or more PTR records giving Service Instance
-Names. Then to contact a particular service, the client can query for the SRV {{rfc2782}}
-and TXT records of the selected service instance name. The SRV record contains the IP
-address of the proxy service instance as well as the port number. The port number fo
-QUIC-based proxy is usually expected to be 443 but may differ. The TXT can contain
-additional information describing the kind of proxy services that is offered.
+
+As specified in {{rfc6763}} the client can perform a PTR query for a list of available proxy instance in following way:
+
+_quicproxy._udp.<domain>
+
+here the <domain> portion is the domain name where the service is registered. The domain name can be obtained via DHCP options or preconfigured.
+
+The result of this PTR lookup is a set of zero or more PTR records giving Service Instance names. Then to contact a particular service, the client can query for the SRV {{rfc2782}} and TXT records of the selected service instance name. The SRV record contains the IP address of the proxy service instance as well as the port number. The port number of QUIC-based proxy is usually expected to be 443 but may differ. The TXT can contain additional information describing the kind of proxy services that is offered.
 
 [ToDo: format of TXT record using "key=value"]
+[comment: {zahed} I would see the TXT record as a way to send information about what functions the proxy can perform, hence would rather suggest to focus on it later]
 
-## Local discovery
+## Local discovery using mDNS
 
- 
-To discovery QUIC-based proxy services locally, the client quests the PTR record for the 
-name "_quicproxy._udp.local.". The result of this PTR lookup is a set of zero or
-more PTR records giving Service Instance Names of the form:
+{{rfc6762}} defines the use of ".local." for performing DNS like operations on the local link. Any DNS query for a name ending "local." will be send to predefined IPv4 or IPv6 link local multicast address.
+
+To discovery QUIC-based proxy services locally, the client request the PTR record for the name: 
+
+"_quicproxy._udp.local." 
+
+The result of this PTR lookup is a set of zero or more PTR records giving Service Instance Names of the form:
 
 	<Instance>._quicproxy._udp.local.
 	
-[Editors' Note: Or _masque._upd ? Or _proxy._quic._upd or _quicproxy._http._udp ...? 
+[Editors' Note: Or _masque._udp ? Or _proxy._quic._udp or _quicproxy._http._udp ...? 
 However in the later case the proxy should also actually ofter a webpage...]
 
 ## Discovery for a rRemote Domains
@@ -297,7 +308,15 @@ However in the later case the proxy should also actually ofter a webpage...]
 If a client wants to discover a QUIC-based proxy server for a remote domain, this domain
 has to be known by the client, e.g. being preconfigured in the application.
 
+# Using PCP options
 
+[TODO: needs write up]
+
+# Using Anycast address
+
+Wellknown IP anycast address can be used to start communicating with QUIC proxy or to discovery any/list of unicast address of a QUIC proxy. When the proxy recieves the request for proxy functionalites then it can either decide to reposond to the client from the anycast address as source address or it can send back a list of unicast address with a redirect command.
+
+[TODO: this needs more thinking before adding this as an option. treat the current text as placeholder and for further discussion on it]
 
 # IANA Considerations
 
