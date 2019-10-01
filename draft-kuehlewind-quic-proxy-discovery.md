@@ -55,7 +55,7 @@ else on the Internet usually close to the traget server or even in the same
 network as the target server.
 
 This document assume that the proxy server is connected via QUIC and discusses
-currently discovery mechanisms based on DNS and Provisioning Domains (PvD).
+potential discovery mechanisms for such a QUIC-based proxy.
 
 --- middle
 
@@ -95,6 +95,11 @@ in the access network, or somewhere else on the Internet usually close to the
 traget server or even in the same network as the target server.
 
 > At a note about mobile networks?
+> comment: {zahed} I dont thinkg we need any text there on mobile networks here.   
+> Perhaps we can have a separate section for mobile networks where we can just on top 
+> of the discovery mechanisms here in in specific networks there can be other 
+> mechanisms to discover proxies in those domain. then mention 3GPP exposure frameworks
+> can be used in mobile networks as and example. 
 
 
 # Using DHCP for Local Discovery 
