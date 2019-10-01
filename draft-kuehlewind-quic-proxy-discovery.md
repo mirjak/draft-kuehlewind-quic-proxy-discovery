@@ -150,7 +150,7 @@ used. (16-bit unsigned integer)
 
 IPv4 Addresses of QUIC-based Proxy Servers:
 
-: one or more 32-bit IPv4 addresses of QUIC-based proxy servers.  The number of addresses
+: one or more c of QUIC-based proxy servers.  The number of addresses
 is determined by the Length field. That is, the number of addresses is equal to 
 (Length - 2) / 4.
 
@@ -310,7 +310,43 @@ has to be known by the client, e.g. being preconfigured in the application.
 
 # Using PCP options
 
-[TODO: needs write up]
+Port Control Protocol (PCP), described in {{RFC6887}}, defines mechanism to do packet forwarding for different types of IPv4/Ipv6 Network Address Translators (NAT) or firewall. The usual deployment on PCP include Carrier-Grade NAT (CGN), Customer Permisis Equipment (CPE) and as well as residential NATs. Hence, the discovery of QUIC-based proxy can also be realized via PCP implementations.
+
+PCP allows options tobe included in the PCP request and response header. The QUIC-based proxy information can be included in the response header as options. As {{RFC6887}} describes the client receiving the options that is dont understand should ignore them. 
+
+A PCP option with QUIC-based proxy information is speficied below -
+
+~~~~~
+      0                   1                   2                   3
+      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |  <Option Code>  |  Reserved     |            Length           |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     :           IP Addresses of QUIC-based Proxy Servers            :
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~~
+{: #fig-PCP-option
+   title="Proxy Discovery PCP option format"}
+
+The fields are described below -
+
+Option Code:  
+
+: 8 bits.  Its most significant bit indicates if this option is mandatory (0) or optional (1) to process.
+
+Reserved:  
+
+: 8 bits.  MUST be set to 0 on transmission and MUST be ignored on reception.
+
+Option Length:  
+
+:16 bits.  Indicates the length of the enclosed data, in octets.  Options with length of 0 are allowed.  Options that are not a multiple of 4 octets long are followed by one, two, or three 0 octets to pad their effective length in the packet to be a multiple of 4 octets.  The Option Length reflects the semantic length of the option, not including any padding octets.
+
+IP Addresses of QUIC-based Proxy Servers:
+
+: one or more 128-bit IPv6 addresses and/or 32-bit IPv4 addresses of QUIC-based proxy servers.  The number of addresses is determined by the Length field. That is, the number of addresses is equal to 
+(Length - 1) / 2.
+
 
 # Using Anycast address
 
