@@ -33,6 +33,7 @@ normative:
     RFC6762:
     RFC1035:
     RFC2782:
+    RFC6887:
 
 informative:
     I-D.kuehlewind-quic-substrate:
@@ -104,18 +105,18 @@ specified below. The option can contain one or more IP addresses of QUIC-based p
 servers. All of the addresses share the same Lifetime value. If it is desirable to have
 different Lifetime values, multiple options can be used.
 
-Comment: Type of proxy and what about multiple ones?
+> Comment: Type of proxy and what about multiple ones?
 
-TODO: decide
-whether we need a lifetime here. the current intention is to return
-IP address(es), this means there might not be a need for name
-resolution. In that case the lifetime can help indicating the
-validity period of the information. In case the DHCP options returns
-domain names then a resource record for the name reslution will
-contain TTL value per record. hecne, in that case the lifetime
-information will be reduncdant.]
+> TODO: decide
+> whether we need a lifetime here. the current intention is to return
+> IP address(es), this means there might not be a need for name
+> resolution. In that case the lifetime can help indicating the
+> validity period of the information. In case the DHCP options returns
+> domain names then a resource record for the name reslution will
+> contain TTL value per record. hecne, in that case the lifetime
+> information will be reduncdant.]
 
-TODO: will the DHCP option only include IP addresses?
+> TODO: will the DHCP option only include IP addresses?
 
 ~~~~~
                     0                             1
@@ -308,10 +309,10 @@ number of QUIC-based proxy is usually expected to be 443 but may
 differ. The TXT can contain additional information describing the kind
 of proxy services that is offered.
 
-"ToDo: format of TXT record using "key=value""
-comment: {zahed} I would see the TXT record as a way to send
-information about what functions the proxy can perform, hence would
-rather suggest to focus on it later
+> "ToDo: format of TXT record using "key=value""
+> comment: {zahed} I would see the TXT record as a way to send
+> information about what functions the proxy can perform, hence would
+> rather suggest to focus on it later
 
 ## Local discovery using mDNS
 
@@ -329,8 +330,8 @@ giving Service Instance Names of the form:
 
     <Instance>._quicproxy._udp.local.
 
-Editors' Note: Or _masque._udp ? Or _proxy._quic._udp or _quicproxy._http._udp ...? 
-However in the later case the proxy should also actually ofter a webpage...
+> Editors' Note: Or _masque._udp ? Or _proxy._quic._udp or _quicproxy._http._udp ...? 
+> However in the later case the proxy should also actually ofter a webpage...
 
 ## Discovery for a Remote Domains
 
@@ -386,9 +387,9 @@ then it can either decide to reposond to the client from the anycast
 address as source address or it can send back a list of unicast
 address with a redirect command.
 
-TODO: this needs more thinking before adding this as an
-option. treat the current text as placeholder and for further
-discussion on it
+> TODO: this needs more thinking before adding this as an
+> option. treat the current text as placeholder and for further
+> discussion on it
 
 # IANA Considerations
 
