@@ -24,13 +24,12 @@ author:
     email: zaheduzzaman.sarker@ericsson.com
 
 
-
 normative:
     I-D.ietf-intarea-provisioning-domains:
     RFC4861:
     RFC2131:
     RFC8415:
-    rfc6763
+    rfc6763:
     rfc1035:
     rfc2782:
 
@@ -93,7 +92,7 @@ that are either located in the local network, e.g. home or enterprise network,
 in the access network, or somewhere else on the Internet usually close to the
 traget server or even in the same network as the target server.
 
-[At a note about mobile networks?]
+> At a note about mobile networks?
 
 
 # Using DHCP for Local Discovery 
@@ -103,6 +102,8 @@ networks, as well DHCPv6 {{RFC8415}} in IPv6 networks. New options for both prot
 specified below. The option can contain one or more IP addresses of QUIC-based proxy
 servers. All of the addresses share the same Lifetime value. If it is desirable to have
 different Lifetime values, multiple options can be used.
+
+> Type of proxy and what about multiple ones?
 
 ~~~~~
                     0                             1
@@ -249,7 +250,7 @@ is determined by the Length field. That is, the number of addresses is equal to
 ## Using PVDs
 
 If the local network provides configuration with an Explicit Provisioning Domain (PvD)
-[I-D.ietf-intarea-provisioning-domains], the RA defined above can be used with the 
+{{I-D.ietf-intarea-provisioning-domains}}, the RA defined above can be used with the 
 PvD Option or alternatively proxy information can be retrieved in the additional information
 JSON files associated with the PvD ID.  The endhost resolves the URL provided in the PvD
 ID into an IP address using the local DNS server that is associated with the corresponding
@@ -263,36 +264,37 @@ service directly from the proxy server.
 For remote network a Web PvD might be available that contains proxy information. If
 provided, the PvD JSON configuration file retrievable at the URI with the format:
 
-	https://<Domain>/.well-known/pvd
+> "https://<Domain>/.well-known/pvd"
 
 # DNS-based service discovery
 
 {{rfc6763}} describes the use of SRV records to discover the available instances 
 of a type of service. To get a list of names of the available instance for a certain
 service a client requests records of type "PTR" (pointer from one name to another in the
-DNS namespace {{RFC1035}} for a name containing the service and domain.
-The result of this PTR lookup is a set of zero or more PTR records giving Service Instance
-Names. Then to contact a particular service, the client can query for the SRV {{rfc2782}}
-and TXT records of the selected service instance name. The SRV record contains the IP
-address of the proxy service instance as well as the port number. The port number fo
+DNS namespace {{RFC1035}} for a name containing the service and domain. The result 
+of this PTR lookup is a set of zero or more PTR records giving Service Instance
+Names. Then to contact a particular service, the client can query for the SRV
+{{rfc2782}} and TXT records of the selected service instance name. The SRV record 
+contains the IP address of the proxy service instance as well as the port number. The port number of
 QUIC-based proxy is usually expected to be 443 but may differ. The TXT can contain
 additional information describing the kind of proxy services that is offered.
 
-[ToDo: format of TXT record using "key=value"]
+> "ToDo: format of TXT record using "key=value""
 
 ## Local discovery
+
 
  
 To discovery QUIC-based proxy services locally, the client quests the PTR record for the 
 name "_quicproxy._udp.local.". The result of this PTR lookup is a set of zero or
 more PTR records giving Service Instance Names of the form:
 
-	<Instance>._quicproxy._udp.local.
-	
-[Editors' Note: Or _masque._upd ? Or _proxy._quic._upd or _quicproxy._http._udp ...? 
-However in the later case the proxy should also actually ofter a webpage...]
+> "<Instance>._quicproxy._udp.local."
 
-## Discovery for a rRemote Domains
+> "Editors'' Note: Or _masque._upd ? Or _proxy._quic._upd or _quicproxy._http._udp ...?
+However in the later case the proxy should also actually ofter a webpage..."
+
+## Discovery for a Remote Domains
 
 If a client wants to discover a QUIC-based proxy server for a remote domain, this domain
 has to be known by the client, e.g. being preconfigured in the application.
@@ -311,10 +313,12 @@ the Proxy Discovery Option in the IPv6 Neighbor Discovery Option Formats registr
 This document adds a key to the “Additional Information PvD Keys” registry, defined by
 {{I-D.ietf-intarea-provisioning-domains}}.
 
-JSON key      | Description	                       | Type             | Example
+~~~~~
+JSON key      | Description                        | Type             | Example
 ------------- | ---------------------------------- | ---------------- | ---
 QuicProxyIP   | IP adress for QUIC-based proxies   | Array ot Strings | ["2001:db8:::1", "2001:db8:::2"]
 ProxyService  | IDs identifying a specific service | Array ot Strings | ["Forwarding", "DNSResolution"]
+~~~~~
 
 Further, IANA is requested to register a new service name "quicproxy" in the "Service Name
 and Transport Protocol Port Number Registry" 
@@ -322,12 +326,10 @@ and Transport Protocol Port Number Registry"
 
 # Security Consideration
 
-[TBD]
+> TBD
 
 # Contributors
 
 
 
 # Acknowledgments
-
-
