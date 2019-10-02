@@ -288,7 +288,7 @@ at the URI with the format:
 
      https://<Domain>/.well-known/pvd"
 
-# DNS-based service discovery
+# DNS Service Discovery (DNS-SD)
 
 {{RFC6763}} describes the use of SRV records to discover the available
 instances of a type of service. To get a list of names of the
