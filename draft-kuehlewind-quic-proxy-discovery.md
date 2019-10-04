@@ -413,10 +413,14 @@ This document adds a key to the “Additional Information PvD Keys”
 registry, defined by {{I-D.ietf-intarea-provisioning-domains}}.
 
 ~~~~~
-JSON key      | Description                        | Type             | Example
-------------- | ---------------------------------- | ---------------- | ---
-QuicProxyIP   | IP adress for QUIC-based proxies   | Array ot Strings | "["2001:db8:::1", "2001:db8:::2"]"
-ProxyService  | IDs identifying a specific service | Array ot Strings | "["Forwarding", "DNSResolution"]"
+JSON key      | Description        | Type    | Example
+------------- | -----------------  | ------- | ---
+QuicProxyIP   | IP adress for      | Array of| "["2001:db8:::1",
+              | QUIC-based proxies | Strings |   "2001:db8:::2"]"
+--------------------------------------------------------------------
+ProxyService  | IDs identifying    | Array of| "["Forwarding",
+              | a specific service | Strings |   "DNSResolution"]"
+--------------------------------------------------------------------
 ~~~~~
 
 Further, IANA is requested to register a new service name "quicproxy" in the "Service Name
