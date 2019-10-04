@@ -1,6 +1,6 @@
 ---
-title: Discovery Mechanism for QUIC-based Proxy Services
-abbrev: QUIC Substrate
+title: Discovery Mechanism for QUIC-based non-transparent Proxy Services
+abbrev: QUIC Non-transparent Proxy Discovery
 docname: draft-kuehlewind-quic-proxy-discovery-latest
 date:
 category: info
@@ -43,19 +43,19 @@ informative:
 
 --- abstract
 
-Often proxy servers are used as an intermidate instance to connect to a web
-server when the webserver is not directly reachable or the proxy can provide a
-support service like, e.g., address anonymisation. To use the proxy a client
+Often an intermidate instance (such as a proxy server) is used to connect to a web
+server or a communicating peer, when the end to end IP connectivity is not possible or the proxy can provide a
+support service like, e.g., address anonymisation. To use the non-transparent proxy a client
 explicitly connects to it and requests forwarding to the final target server.
 The client either knows the proxy address as preconfigured in the application or
 can dynamically learn about available proxy services. This document describes
-different discovery mechanisms for proxies that are either located in the local
+different discovery mechanisms for non-transparent proxies that are either located in the local
 network, e.g. home or enterprise network, in the access network, or somewhere
 else on the Internet usually close to the traget server or even in the same
 network as the target server.
 
-This document assume that the proxy server is connected via QUIC and discusses
-potential discovery mechanisms for such a QUIC-based proxy.
+This document assume that the non-transparent proxy server is connected via QUIC and discusses
+potential discovery mechanisms for such a QUIC-based non-tranparent proxy.
 
 --- middle
 
@@ -68,39 +68,42 @@ security allows the transport and security handshakes to be combined into a
 single round-trip exchange, after which both the transport connection and
 authenticated encryption keys are ready.
 
-Often proxy servers are used as an intermidate instance to connect to a web
-server when the webserver is not directly reachable or the proxy can provide a
+Often an intermidate instance (such as a proxy server) is used to connect to a web
+server or a communicating peer, when the end to end IP connectivity is not possible or the proxy can provide a
 support service like, e.g., address anonymisation. QUIC's ability to multiplex,
 encrypt data, and migrate between network paths makes it ideal for solutions
 that need to tunnel or proxy traffic.
 
-Existing proxies that are not based on QUIC are often transparent. That is, they
+Existing proxies that are based on TCP and HTTP are often transparent. That is, they
 do not require the cooperation of the ultimate connection endpoints, and are
 often not visible to one or both of the endpoints. If QUIC provides the basis
 for future tunneling and proxying solutions, it is expected that this
 relationship will change. At least one of the endpoints will be aware of the
-proxy, explicitly connect to it, and coordinate with it. This allows client
+proxy, explicitly connect to it, and coordinate with it. This makes the proxy and 
+tunneling non-transparent to the atleast to the client. This allows client
 hosts to make explicit decisions about the services they request from proxies
 (for example, simple forward or more advance performance-optimizing services),
 and to do so using a secure communication channel between themselves and the
 proxy. {{I-D.kuehlewind-quic-substrate}} describes some of the use cases for
 using QUIC for proxying and tunneling.
 
-To use a proxy service, a client explicitly connects to it and requests forwarding to
+To use a non-transparent proxy service, a client explicitly connects to it and requests forwarding to
 the final target server. The client either knows the proxy address as
 preconfigured in the application or can dynamically learn about available proxy
 servers. This document describes different discovery mechanisms for proxies
 that are either located in the local network, e.g. home or enterprise network,
 in the access network, or somewhere else on the Internet usually close to the
-traget server or even in the same network as the target server.
+traget server or even in the same network as the target server. For the rest of 
+the document the work "proxy" referes to a non-transparent proxy.
 
+<!--->
 > At a note about mobile networks?
 > comment: {zahed} I dont thinkg we need any text there on mobile networks here.   
 > Perhaps we can have a separate section for mobile networks where we can just on top 
 > of the discovery mechanisms here in in specific networks there can be other 
 > mechanisms to discover proxies in those domain. then mention 3GPP exposure frameworks
 > can be used in mobile networks as and example. 
-
+-->
 
 # Using DHCP for Local Discovery 
 
@@ -121,7 +124,7 @@ different Lifetime values, multiple options can be used.
 > contain TTL value per record. hecne, in that case the lifetime
 > information will be reduncdant.]
 
-> TODO: will the DHCP option only include IP addresses?
+> TODO: will the DHCP option only include IP addresses what about DNS names?
 
 ~~~~~
                     0                             1
@@ -313,11 +316,12 @@ of the proxy service instance as well as the port number. The port
 number of QUIC-based proxy is usually expected to be 443 but may
 differ. The TXT can contain additional information describing the kind
 of proxy services that is offered.
-
+<!---
 > "ToDo: format of TXT record using "key=value""
 > comment: {zahed} I would see the TXT record as a way to send
 > information about what functions the proxy can perform, hence would
 > rather suggest to focus on it later
+-->
 
 ## Local discovery using mDNS
 
@@ -336,7 +340,7 @@ giving Service Instance Names of the form:
     <Instance>._quicproxy._udp.local.
 
 > Editors' Note: Or _masque._udp ? Or _proxy._quic._udp or _quicproxy._http._udp ...? 
-> However in the later case the proxy should also actually ofter a webpage...
+> However in the later case the proxy should also actually offer a webpage...
 
 ## Discovery for a Remote Domains
 
@@ -392,9 +396,8 @@ then it can either decide to reposond to the client from the anycast
 address as source address or it can send back a list of unicast
 address with a redirect command.
 
-> TODO: this needs more thinking before adding this as an
-> option. treat the current text as placeholder and for further
-> discussion on it
+> TODO: complete the description
+
 
 # IANA Considerations
 
