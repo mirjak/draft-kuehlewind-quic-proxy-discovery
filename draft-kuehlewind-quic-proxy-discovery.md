@@ -44,18 +44,18 @@ informative:
 --- abstract
 
 Often an intermidate instance (such as a proxy server) is used to connect to a web
-server or a communicating peer, when the end to end IP connectivity is not possible or the proxy can provide a
-support service like, e.g., address anonymisation. To use the non-transparent proxy a client
+server or a communicating peer if a direct end-to-end IP connectivity is not possible or the proxy can provide a support service like, e.g., address anonymisation. 
+To use a non-transparent proxy a client
 explicitly connects to it and requests forwarding to the final target server.
 The client either knows the proxy address as preconfigured in the application or
 can dynamically learn about available proxy services. This document describes
 different discovery mechanisms for non-transparent proxies that are either located in the local
 network, e.g. home or enterprise network, in the access network, or somewhere
-else on the Internet usually close to the traget server or even in the same
+else on the Internet usually close to the target server or even in the same
 network as the target server.
 
 This document assume that the non-transparent proxy server is connected via QUIC and discusses
-potential discovery mechanisms for such a QUIC-based non-tranparent proxy.
+potential discovery mechanisms for such a QUIC-based non-transparent proxy.
 
 --- middle
 
@@ -68,8 +68,8 @@ security allows the transport and security handshakes to be combined into a
 single round-trip exchange, after which both the transport connection and
 authenticated encryption keys are ready.
 
-Often an intermidate instance (such as a proxy server) is used to connect to a web
-server or a communicating peer, when the end to end IP connectivity is not possible or the proxy can provide a
+Often an intermediate instance (such as a proxy server) is used to connect to a web
+server or a communicating peer if a direct end-to-end IP connectivity is not possible or the proxy can provide a
 support service like, e.g., address anonymisation. QUIC's ability to multiplex,
 encrypt data, and migrate between network paths makes it ideal for solutions
 that need to tunnel or proxy traffic.
@@ -80,10 +80,10 @@ often not visible to one or both of the endpoints. If QUIC provides the basis
 for future tunneling and proxying solutions, it is expected that this
 relationship will change. At least one of the endpoints will be aware of the
 proxy, explicitly connect to it, and coordinate with it. This makes the proxy and 
-tunneling non-transparent to the atleast to the client. This allows client
+tunneling non-transparent to at least most often the client. This allows client
 hosts to make explicit decisions about the services they request from proxies
-(for example, simple forward or more advance performance-optimizing services),
-and to do so using a secure communication channel between themselves and the
+(for example, simple forwarding or more advance performance-optimizing services),
+and to do so using a secure communication channel between theirself and the
 proxy. {{I-D.kuehlewind-quic-substrate}} describes some of the use cases for
 using QUIC for proxying and tunneling.
 
@@ -96,35 +96,16 @@ in the access network, or somewhere else on the Internet usually close to the
 traget server or even in the same network as the target server. For the rest of 
 the document the work "proxy" referes to a non-transparent proxy.
 
-<!--->
-> At a note about mobile networks?
-> comment: {zahed} I dont thinkg we need any text there on mobile networks here.   
-> Perhaps we can have a separate section for mobile networks where we can just on top 
-> of the discovery mechanisms here in in specific networks there can be other 
-> mechanisms to discover proxies in those domain. then mention 3GPP exposure frameworks
-> can be used in mobile networks as and example. 
--->
+The discovery mechanism proposed in this document cover a range of approaches based on IETF protocols and commonly used mechanims, however, other mechanims in more specialized networks are possible as well. For 5G network the 3GPP specifies an extended exposure framework that potentially can also be used for proxy discovery and rounting support.
+
 
 # Using DHCP for Local Discovery 
 
-DHCP {{RFC2131}} can be used to announce the IP address of local proxy server in the IPv4
+DHCP {{RFC2131}} can be used to announce the IP address of local proxy server in IPv4
 networks, as well DHCPv6 {{RFC8415}} in IPv6 networks. New options for both protocols are
 specified below. The option can contain one or more IP addresses of QUIC-based proxy
 servers. All of the addresses share the same Lifetime value. If it is desirable to have
 different Lifetime values, multiple options can be used.
-
-> Comment: Type of proxy and what about multiple ones?
-
-> TODO: decide
-> whether we need a lifetime here. the current intention is to return
-> IP address(es), this means there might not be a need for name
-> resolution. In that case the lifetime can help indicating the
-> validity period of the information. In case the DHCP options returns
-> domain names then a resource record for the name reslution will
-> contain TTL value per record. hecne, in that case the lifetime
-> information will be reduncdant.]
-
-> TODO: will the DHCP option only include IP addresses what about DNS names?
 
 ~~~~~
                     0                             1
@@ -316,12 +297,7 @@ of the proxy service instance as well as the port number. The port
 number of QUIC-based proxy is usually expected to be 443 but may
 differ. The TXT can contain additional information describing the kind
 of proxy services that is offered.
-<!---
-> "ToDo: format of TXT record using "key=value""
-> comment: {zahed} I would see the TXT record as a way to send
-> information about what functions the proxy can perform, hence would
-> rather suggest to focus on it later
--->
+
 
 ## Local discovery using mDNS
 
@@ -342,7 +318,7 @@ giving Service Instance Names of the form:
 > Editors' Note: Or _masque._udp ? Or _proxy._quic._udp or _quicproxy._http._udp ...? 
 > However in the later case the proxy should also actually offer a webpage...
 
-## Discovery for a Remote Domains
+## Discovery for Remote Domains
 
 If a client wants to discover a QUIC-based proxy server for a remote
 domain, this domain has to be known by the client, e.g. being
@@ -352,9 +328,9 @@ preconfigured in the application.
 
 Port Control Protocol (PCP), described in {{RFC6887}}, defines mechanism to do packet forwarding for different types of IPv4/Ipv6 Network Address Translators (NAT) or firewall. The usual deployment on PCP include Carrier-Grade NAT (CGN), Customer Permisis Equipment (CPE) and as well as residential NATs. Hence, the discovery of QUIC-based proxy can also be realized via PCP implementations.
 
-PCP allows options tobe included in the PCP request and response header. The QUIC-based proxy information can be included in the response header as options. As {{RFC6887}} describes the client receiving the options that is dont understand should ignore them. 
+PCP allows options to be included in the PCP request and response header. The QUIC-based proxy information can be included in the response header as options. As {{RFC6887}} describes, the client will ignore any options that it does not understand. 
 
-A PCP option with QUIC-based proxy information is speficied below -
+A PCP option with QUIC-based proxy information is speficied below.
 
 ~~~~~
       0                   1                   2                   3
@@ -372,7 +348,7 @@ The fields are described below -
 
 Option Code:  
 
-: 8 bits.  Its most significant bit indicates if this option is mandatory (0) or optional (1) to process.
+: 8 bits.  The most significant bit indicates if this option is mandatory (0) or optional (1) to process.
 
 Reserved:  
 
@@ -384,15 +360,14 @@ Option Length:
 
 IP Addresses of QUIC-based Proxy Servers:
 
-: one or more 128-bit IPv6 addresses and/or 32-bit IPv4 addresses of QUIC-based proxy servers.  The number of addresses is determined by the Length field. That is, the number of addresses is equal to 
-(Length - 1) / 2.
+: one or more 128-bit IPv6 addresses and/or 32-bit IPv4 addresses of QUIC-based proxy servers.  The number of addresses is determined by the Length field. That is, the number of addresses is equal to (Length - 1) / 2.
 
 # Using Anycast address
 
-Wellknown IP anycast address can be used to start communicating with
-QUIC proxy or to discovery any/list of unicast address of a QUIC
-proxy. When the proxy recieves the request for proxy functionalites
-then it can either decide to reposond to the client from the anycast
+Wellknown IP anycast addresses can be used to start communicating with
+QUIC proxy or to discovery any or a list of unicast address of a QUIC
+proxy. When the proxy recieves the request for proxy functionalites,
+it can either decide to reposond to the client with the anycast
 address as source address or it can send back a list of unicast
 address with a redirect command.
 
