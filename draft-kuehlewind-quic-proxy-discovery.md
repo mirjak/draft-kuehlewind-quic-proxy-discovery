@@ -1,5 +1,5 @@
 ---
-title: Discovery Mechanism for QUIC-based non-transparent Proxy Services
+title: Discovery Mechanism for QUIC-based, Non-transparent Proxy Services
 abbrev: QUIC Non-transparent Proxy Discovery
 docname: draft-kuehlewind-quic-proxy-discovery-latest
 date:
@@ -54,8 +54,8 @@ network, e.g. home or enterprise network, in the access network, or somewhere
 else on the Internet usually close to the target server or even in the same
 network as the target server.
 
-This document assume that the non-transparent proxy server is connected via QUIC and discusses
-potential discovery mechanisms for such a QUIC-based non-transparent proxy.
+This document assumes that the non-transparent proxy server is connected via QUIC and discusses
+potential discovery mechanisms for such a QUIC-based, non-transparent proxy.
 
 --- middle
 
@@ -83,7 +83,7 @@ proxy, explicitly connect to it, and coordinate with it. This makes the proxy an
 tunneling non-transparent to at least most often the client. This allows client
 hosts to make explicit decisions about the services they request from proxies
 (for example, simple forwarding or more advance performance-optimizing services),
-and to do so using a secure communication channel between theirself and the
+and to do so using a secure communication channel between itself and the
 proxy. {{I-D.kuehlewind-quic-substrate}} describes some of the use cases for
 using QUIC for proxying and tunneling.
 
@@ -96,7 +96,7 @@ in the access network, or somewhere else on the Internet usually close to the
 traget server or even in the same network as the target server. For the rest of 
 the document the work "proxy" referes to a non-transparent proxy.
 
-The discovery mechanism proposed in this document cover a range of approaches based on IETF protocols and commonly used mechanims, however, other mechanims in more specialized networks are possible as well. For 5G network the 3GPP specifies an extended exposure framework that potentially can also be used for proxy discovery and rounting support.
+The discovery mechanisms proposed in this document cover a range of approaches based on IETF protocols and commonly used mechanims, however, other mechanims in more specialized networks are possible as well. For 5G networks, the 3GPP specifies an extended exposure framework that potentially can also be used for proxy discovery and routing support.
 
 
 # Using DHCP for Local Discovery 
@@ -137,7 +137,7 @@ address increases the length by 4. (8-bit unsigned integer)
 
 Q:
 
-: is set to one, proxy supports QUIC on port 443 (1 bit)
+: is set to one if proxy supports QUIC on port 443 (1 bit)
 
 Lifetime:
 
@@ -148,7 +148,7 @@ used. (16-bit unsigned integer)
 
 IPv4 Addresses of QUIC-based Proxy Servers:
 
-: one or more c of QUIC-based proxy servers.  The number of addresses
+: one or more 64-bit IPv4 addresses of QUIC-based proxy servers.  The number of addresses
 is determined by the Length field. That is, the number of addresses is equal to 
 (Length - 2) / 4.
 
@@ -180,7 +180,7 @@ address increases the length by 16. (8-bit unsigned integer)
 
 Q:
 
-: is set to one, proxy supports QUIC on port 443 (1 bit)
+: is set to one if proxy supports QUIC on port 443 (1 bit)
 
 
 Lifetime:
@@ -233,7 +233,7 @@ address increases the length by 2. (8-bit unsigned integer)
 
 Q:
 
-: is set to one, proxy supports QUIC on port 443 (1 bit)
+: is set to one if proxy supports QUIC on port 443 (1 bit)
 
 
 Lifetime:
@@ -316,7 +316,7 @@ giving Service Instance Names of the form:
     <Instance>._quicproxy._udp.local.
 
 > Editors' Note: Or _masque._udp ? Or _proxy._quic._udp or _quicproxy._http._udp ...? 
-> However in the later case the proxy should also actually offer a webpage...
+> However in the later case the proxy should probably also actually offer a webpage...
 
 ## Discovery for Remote Domains
 
