@@ -43,7 +43,7 @@ informative:
 
 --- abstract
 
-Often an intermidate instance (such as a proxy server) is used to connect to a web
+Often an intermediate instance (such as a proxy server) is used to connect to a web
 server or a communicating peer if a direct end-to-end IP connectivity is not possible or the proxy can provide a support service like, e.g., address anonymisation. 
 To use a non-transparent proxy a client
 explicitly connects to it and requests forwarding to the final target server.
