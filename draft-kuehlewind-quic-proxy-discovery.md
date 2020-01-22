@@ -37,6 +37,7 @@ normative:
 
 informative:
     I-D.kuehlewind-quic-substrate:
+    I-D.schinazi-masque:
     RFC2939:
 
 
@@ -70,7 +71,7 @@ authenticated encryption keys are ready.
 
 Often an intermediate instance (such as a proxy server) is used to connect to a web
 server or a communicating peer if a direct end-to-end IP connectivity is not possible or the proxy can provide a
-support service like, e.g., address anonymisation. QUIC's ability to multiplex,
+support service like, e.g., address anonymization. QUIC's ability to multiplex,
 encrypt data, and migrate between network paths makes it ideal for solutions
 that need to tunnel or proxy traffic.
 
@@ -93,19 +94,25 @@ preconfigured in the application or can dynamically learn about available proxy
 servers. This document describes different discovery mechanisms for proxies
 that are either located in the local network, e.g. home or enterprise network,
 in the access network, or somewhere else on the Internet usually close to the
-traget server or even in the same network as the target server. For the rest of 
-the document the work "proxy" referes to a non-transparent proxy.
+target server or even in the same network as the target server. For the rest of 
+the document the work "proxy" refers to a non-transparent proxy.
 
-The discovery mechanisms proposed in this document cover a range of approaches based on IETF protocols and commonly used mechanims, however, other mechanims in more specialized networks are possible as well. For 5G networks, the 3GPP specifies an extended exposure framework that potentially can also be used for proxy discovery and routing support.
+The discovery mechanisms proposed in this document cover a range of approaches based on IETF protocols and commonly used mechanisms, however, other mechanisms in more specialized networks are possible as well. For 5G networks, the 3GPP specifies an extended exposure framework that potentially can also be used for proxy discovery and routing support.
+
+After discovery a client can connect to the proxy and request a proxy service, e.g. using
+the MASQUE protocol {{I-D.schinazi-masque}}, to instruct the proxy forward traffic to a target
+server as well as negotiate and request proxy capabilities and parameters.
 
 
 # Using DHCP for Local Discovery 
 
 DHCP {{RFC2131}} can be used to announce the IP address of local proxy server in IPv4
 networks, as well DHCPv6 {{RFC8415}} in IPv6 networks. New options for both protocols are
-specified below. The option can contain one or more IP addresses of QUIC-based proxy
-servers. All of the addresses share the same Lifetime value. If it is desirable to have
-different Lifetime values, multiple options can be used.
+specified below and as shown in {{#fig-dhcpv4-option}} and {{#fig-dhcpv6-option}}. In both 
+cases the option can contain one or more IP addresses (but of course IPV4 and IOv6 address
+respectively) of QUIC-based proxy servers (indicated by the Q flag). All of the addresses in one
+option share the same Lifetime value. If it is desirable to have different Lifetime values, multiple
+options can be used.
 
 ~~~~~
                     0                             1
@@ -127,12 +134,12 @@ different Lifetime values, multiple options can be used.
    
 Code:
 
-: Proxy Discovery option code (TDB) (8 bit)
+: Proxy Discovery option code (TBD) (8 bit)
 
 Len:
 
 : length of the option (without the Code and Len fields) in units of octets.  The 
-minimum value is 6 if one IPv4 address is contained in the option. Every additional IPv4
+minimum value is 8 if one IPv4 address is contained in the option. Every additional IPv4
 address increases the length by 4. (8-bit unsigned integer)
 
 Q:
@@ -150,7 +157,7 @@ IPv4 Addresses of QUIC-based Proxy Servers:
 
 : one or more 64-bit IPv4 addresses of QUIC-based proxy servers.  The number of addresses
 is determined by the Length field. That is, the number of addresses is equal to 
-(Length - 2) / 4.
+(Length - 4) / 4.
 
 ~~~~~
       0                   1                   2                   3
@@ -166,17 +173,17 @@ is determined by the Length field. That is, the number of addresses is equal to
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~~
 {: #fig-dhcpv6-option
-   title="IPv4 Proxy Discovery DHCP option format"}
+   title="IPv6 Proxy Discovery DHCP option format"}
    
 option-code:
 
-: Proxy Discovery option code (TDB) (16 bit)
+: Proxy Discovery option code (TBD) (16 bit)
 
 option-len:
 
-: length of the option (without the Type and Length fields) in units of 8 octets.  The 
+: length of the option (without the Type and Length fields) in units of octets.  The 
 minimum value is 20 if one IPv6 address is contained in the option. Every additional IPv6
-address increases the length by 16. (8-bit unsigned integer)
+address increases the length by 16. (16-bit unsigned integer)
 
 Q:
 
@@ -186,7 +193,7 @@ Q:
 Lifetime:
 
 : maximum time in seconds (relative to the time the packet is received) over which these
-IPv6 addresses can be used for proxy discovery. A value of all one bits (0xffffffff)
+IPv6 addresses can be used for proxy discovery. A value of all one bits (0xffff)
 represents infinity. A value of zero means that the proxy addresses SHOULD no longer be
 used. (16-bit unsigned integer)
 
@@ -194,7 +201,7 @@ IPv6 Addresses of QUIC-based Proxy Servers:
 
 : one or more 128-bit IPv6 addresses of QUIC-based proxy servers.  The number of addresses
 is determined by the Length field. That is, the number of addresses is equal to 
-(Length - 1) / 2.
+(Length - 4) / 16.
    
    
    
@@ -223,7 +230,7 @@ option.
 
 Type:
 
-: Proxy Discovery option type (TDB) (8 bit)
+: Proxy Discovery option type (TBD) (8 bit)
 
 Length:
 
@@ -258,7 +265,7 @@ proxy information can be retrieved in the additional information JSON
 files associated with the PvD ID.  The endhost resolves the URL
 provided in the PvD ID into an IP address using the local DNS server
 that is associated with the corresponding PvD (see also section
-3.4.4. {{I-D.ietf-intarea-provisioning-domains}}). If a QUIC-based
+3.4.4 of {{I-D.ietf-intarea-provisioning-domains}}). If a QUIC-based
 proxy services is provided the additional information JSON file
 contains the key “QuicProxyIP”. It can then optionally also contain
 more information about the specific proxy services offered using the
@@ -270,18 +277,18 @@ For remote network a Web PvD might be available that contains proxy
 information. If provided, the PvD JSON configuration file retrievable
 at the URI with the format:
 
-     https://<Domain>/.well-known/pvd"
+     https://<Domain>/.well-known/pvd
 
 # DNS Service Discovery (DNS-SD)
 
 {{RFC6763}} describes the use of SRV records to discover the available
 instances of a type of service. To get a list of names of the
 available instance for a certain service a client requests records of
-type "PTR" (pointer from one name to another in the DNS namespace
+type "PTR" (pointer from one name to another) in the DNS namespace
 {{RFC1035}} for a name containing the service and domain.
 
 As specified in {{RFC6763}} the client can perform a PTR query for a
-list of available proxy instance in following way:
+list of available proxy instance in the following way:
 
     _quicproxy._udp.<domain>
 
@@ -303,9 +310,9 @@ of proxy services that is offered.
 
 {{RFC6762}} defines the use of ".local." for performing DNS like
 operations on the local link. Any DNS query for a name ending "local."
-will be send to predefined IPv4 or IPv6 link local multicast address.
+will be sent to a predefined IPv4 or IPv6 link local multicast address.
 
-To discovery QUIC-based proxy services locally, the client request the
+To discover QUIC-based proxy services locally, the client request the
 PTR record for the name:
 
     _quicproxy._udp.local. 
@@ -326,11 +333,13 @@ preconfigured in the application.
 
 # Using PCP options
 
-Port Control Protocol (PCP), described in {{RFC6887}}, defines mechanism to do packet forwarding for different types of IPv4/Ipv6 Network Address Translators (NAT) or firewall. The usual deployment on PCP include Carrier-Grade NAT (CGN), Customer Permisis Equipment (CPE) and as well as residential NATs. Hence, the discovery of QUIC-based proxy can also be realized via PCP implementations.
+Port Control Protocol (PCP), described in {{RFC6887}}, defines mechanism to do packet
+forwarding for different types of IPv4/Ipv6 Network Address Translators (NAT) or firewalls.
+Usual deployments of PCP include Carrier-Grade NAT (CGN), Customer-premises Equipment
+(CPE), or residential NATs. When PCP is used to control address translation and forwarding, 
+the PCP server can also be used to announce the existence of a QUIC-based proxy to the client.
 
-PCP allows options to be included in the PCP request and response header. The QUIC-based proxy information can be included in the response header as options. As {{RFC6887}} describes, the client will ignore any options that it does not understand. 
-
-A PCP option with QUIC-based proxy information is speficied below.
+PCP allows options to be included in the PCP request and response header. To announce information from the PCP server to the client, information about who to find a the QUIC-based proxy can be included in the response header as an option. As {{RFC6887}} describes, the client will ignore any options that it does not understand. A new PCP option carrying QUIC-based proxy information is speficied below.
 
 ~~~~~
       0                   1                   2                   3
@@ -338,7 +347,10 @@ A PCP option with QUIC-based proxy information is speficied below.
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
      |  <Option Code>  |  Reserved     |            Length           |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     :           IP Addresses of QUIC-based Proxy Servers            :
+     |                                                               |
+     :          IP Addresses of QUIC-based Proxy Servers             :
+     :                      (each 128 bits)                          :
+     |                                                               |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~~
 {: #fig-PCP-option
@@ -360,14 +372,14 @@ Option Length:
 
 IP Addresses of QUIC-based Proxy Servers:
 
-: one or more 128-bit IPv6 addresses and/or 32-bit IPv4 addresses of QUIC-based proxy servers.  The number of addresses is determined by the Length field. That is, the number of addresses is equal to (Length - 1) / 2.
+: one or more IPv6 addresses and/or IPv4 addresses of QUIC-based proxy servers. As specified in section 5 of {{RFC6887}} all addresses use fixed-size 128-bit fields. When the address field holds an IPv4 address, an IPv4-mapped IPv6 address {{RFC4291}} is used (::ffff:0:0/96). The number of addresses is determined by the Length field. That is, the number of addresses is equal to Length/16.
 
 # Using Anycast address
 
-Wellknown IP anycast addresses can be used to start communicating with
+Well-known IP anycast addresses can be used to start communicating with
 QUIC proxy or to discovery any or a list of unicast address of a QUIC
-proxy. When the proxy recieves the request for proxy functionalites,
-it can either decide to reposond to the client with the anycast
+proxy. When the proxy receives the request for proxy functionalities,
+it can either decide to repsond to the client with the anycast
 address as source address or it can send back a list of unicast
 address with a redirect command.
 
