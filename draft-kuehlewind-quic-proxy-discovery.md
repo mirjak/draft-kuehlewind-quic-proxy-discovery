@@ -34,6 +34,7 @@ normative:
     RFC1035:
     RFC2782:
     RFC6887:
+    RFC4291:
 
 informative:
     I-D.kuehlewind-quic-substrate:
@@ -108,7 +109,7 @@ server as well as negotiate and request proxy capabilities and parameters.
 
 DHCP {{RFC2131}} can be used to announce the IP address of local proxy server in IPv4
 networks, as well DHCPv6 {{RFC8415}} in IPv6 networks. New options for both protocols are
-specified below and as shown in {{#fig-dhcpv4-option}} and {{#fig-dhcpv6-option}}. In both 
+specified below and as shown in {{fig-dhcpv4-option}} and {{fig-dhcpv6-option}}. In both 
 cases the option can contain one or more IP addresses (but of course IPV4 and IOv6 address
 respectively) of QUIC-based proxy servers (indicated by the Q flag). All of the addresses in one
 option share the same Lifetime value. If it is desirable to have different Lifetime values, multiple
