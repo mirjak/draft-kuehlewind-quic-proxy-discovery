@@ -417,7 +417,17 @@ and Transport Protocol Port Number Registry"
 
 # Security Consideration
 
-> TBD
+Discovery mechanisms that are not authenticated provide no guarantees about the proxy 
+configuration information provided. In some scenarios a client may decide to use this
+information anyway, as either the local environment that the discovery was performed in is
+trusted, or the client has means to authenticate the identify of the proxy when connecting
+using QUIC and only uses the discovery to dynamically detect an IP address.
+
+Further even if the proxy is not trusted, simple forwarding or other network-based services
+may be used by the client if the forwarded traffic itself is the end-to-end encrypted.
+
+For further discussion of the security of each discovery mechanism, see also the security 
+consideration section of these specifications.
 
 # Contributors
 
