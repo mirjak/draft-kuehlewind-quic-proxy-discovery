@@ -428,7 +428,7 @@ may be used by the client if the forwarded traffic itself is end-to-end encrypte
 the trust level should not be assumed to be higher than in the connectivity case without proxy usage.
 Also note that even when the proxy is assumed to be untrusted, an attacker could still use the
 opportunity to redirect traffic over a specific node in order to more easily observe the traffic.
-However, in this case the client is at least award of the use of the proxy and therefore has means
+However, in this case the client is at least aware of the use of the proxy and therefore has means
 to potentially even identify the proxy provider, e.g. based on the IP or certificate.
 
 For further discussion of the security of each discovery mechanism, see also the security 
