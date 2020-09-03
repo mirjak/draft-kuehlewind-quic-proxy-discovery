@@ -1,6 +1,6 @@
 ---
-title: Discovery Mechanisms for MASQUE Services
-abbrev: MASQUE Service Discovery
+title: Discovery Mechanisms for QUIC-based Proxy Services
+abbrev: QUIC Proxy Service Discovery
 docname: draft-kuehlewind-masque-discovery-latest
 date:
 category: info
@@ -31,7 +31,7 @@ author:
 
 
 normative:
-    I-D.ietf-intarea-provisioning-domains:
+    RFC8801:
     RFC4861:
     RFC2131:
     RFC8415:
@@ -43,8 +43,8 @@ normative:
     RFC4291:
 
 informative:
-    I-D.kuehlewind-quic-substrate:
-    I-D.schinazi-masque:
+    I-D.kuehlewind-masque-quic-substrate:
+    I-D.ietf-masque-connect-udp:
     RFC2939:
 
 
@@ -55,13 +55,14 @@ Often an intermediate instance (such as a proxy server) is used to connect to a
 web server or a communicating peer if a direct end-to-end IP connectivity is not
 possible or the proxy can provide a support service like, e.g., address
 anonymisation.  To use a non-transparent proxy a client explicitly connects to
-it and requests forwarding to the final target server.  The client either knows
-the proxy address as preconfigured in the application or can dynamically learn
-about available proxy services. This document describes different discovery
-mechanisms for non-transparent proxies that are either located in the local
-network, e.g. home or enterprise network, in the access network, or somewhere
-else on the Internet usually close to the target server or even in the same
-network as the target server.
+it and requests forwarding to the final target server. MASQUE Connect-UDP Proxy
+service is an example of such a proxy service. The client either knows the proxy
+address as preconfigured in the application or can dynamically learn about
+available proxy services. This document describes different discovery mechanisms
+for non-transparent proxies that are either located in the local network,
+e.g. home or enterprise network, in the access network, or somewhere else on the
+Internet usually close to the target server or even in the same network as the
+target server.
 
 This document assumes that the non-transparent proxy server is connected via
 QUIC and discusses potential discovery mechanisms for such a QUIC-based,
@@ -86,19 +87,19 @@ network paths makes it ideal for solutions that need to tunnel or proxy traffic.
 
 Existing proxies that are based on TCP and HTTP are often transparent. That is,
 they do not require the cooperation of the ultimate connection endpoints, and
-are often not visible to one or both of the endpoints. If QUIC provides the
-basis for future tunneling and proxying solutions, it is expected that this
+are often not visible to one or both of the endpoints. When QUIC provides the
+basis for a tunneling and proxying solutions, such as defined in MASQUE WG, this
 relationship will change. At least one of the endpoints will be aware of the
 proxy, explicitly connect to it, and coordinate with it. This makes the proxy
-and tunneling non-transparent to at least most often the client. This allows
-client hosts to make explicit decisions about the services they request from
-proxies (for example, simple forwarding or more advance performance-optimizing
-services), and to do so using a secure communication channel between itself and
-the proxy. {{I-D.kuehlewind-quic-substrate}} describes some of the use cases for
-using QUIC for proxying and tunneling.
+and tunneling non-transparent to at least one party, most often the client. This
+allows client hosts to make explicit decisions about the services they request
+from proxies (for example, simple forwarding or more advance
+performance-optimizing services), and to do so using a secure communication
+channel between itself and the proxy. {{I-D.kuehlewind-masque-quic-substrate}}
+describes some of the use cases for using QUIC for proxying and tunneling.
 
-To use a non-transparent proxy service, a client explicitly connects to it and
-requests forwarding to the final target server. The client either knows the
+To use a non-transparent proxy service a client explicitly connects to the proxy
+and requests forwarding to the final target server. The client either knows the
 proxy address as preconfigured in the application or can dynamically learn about
 available proxy servers. This document describes different discovery mechanisms
 for proxies that are either located in the local network, e.g. home or
@@ -114,10 +115,14 @@ specifies an extended exposure framework that potentially can also be used for
 proxy discovery and routing support.
 
 After discovery a client can connect to the proxy and request a proxy service,
-e.g. using the MASQUE protocol {{I-D.schinazi-masque}}, to instruct the proxy
-forward traffic to a target server as well as negotiate and request proxy
-capabilities and parameters.
+such as the MASQUE Connect-UDP service {{I-D.ietf-masque-connect-udp}}, to instruct the
+proxy forward traffic to a target server as well as negotiate and request
+proxy capabilities and parameters.
 
+The specific solutions for discovery of proxy services and their specification
+will need to evolve as the nature of the MASQUE proxy services evolve. How
+specifically bound the discovery should be to MASQUE proxy services also will
+need further discussion.
 
 # Using DHCP for Local Discovery 
 
@@ -276,12 +281,12 @@ equal to (Length - 1) / 2.
 ## Using PVDs
 
 If the local network provides configuration with an Explicit Provisioning Domain
-(PvD) {{I-D.ietf-intarea-provisioning-domains}}, the RA defined above can be
+(PvD) {{RFC8801}}, the RA defined above can be
 used with the PvD Option or alternatively proxy information can be retrieved in
 the additional information JSON files associated with the PvD ID.  The endhost
 resolves the URL provided in the PvD ID into an IP address using the local DNS
 server that is associated with the corresponding PvD (see also section 3.4.4 of
-{{I-D.ietf-intarea-provisioning-domains}}). If a QUIC-based proxy services is
+{{RFC8801}}). If a QUIC-based proxy services is
 provided the additional information JSON file contains the key “QuicProxyIP”. It
 can then optionally also contain more information about the specific proxy
 services offered using the "ProxyService" key. Or the client can connect
@@ -425,7 +430,7 @@ value for the Proxy Discovery Option in the IPv6 Neighbor Discovery Option
 Formats registry.
 
 This document adds a key to the “Additional Information PvD Keys”
-registry, defined by {{I-D.ietf-intarea-provisioning-domains}}.
+registry, defined by {{RFC8801}}.
 
 ~~~~~
 JSON key      | Description        | Type    | Example
