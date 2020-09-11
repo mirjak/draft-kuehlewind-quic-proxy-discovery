@@ -1,7 +1,7 @@
 ---
 title: Discovery Mechanisms for QUIC-based Proxy Services
 abbrev: QUIC Proxy Service Discovery
-docname: draft-kuehlewind-masque-discovery-latest
+docname: draft-kuehlewind-masque-proxy-discovery-latest
 date:
 category: info
 
@@ -55,7 +55,7 @@ Often an intermediate instance (such as a proxy server) is used to connect to a
 web server or a communicating peer if a direct end-to-end IP connectivity is not
 possible or the proxy can provide a support service like, e.g., address
 anonymisation.  To use a non-transparent proxy a client explicitly connects to
-it and requests forwarding to the final target server. MASQUE Connect-UDP Proxy
+it and requests forwarding to the final target server. The MASQUE Connect-UDP Proxy
 service is an example of such a proxy service. The client either knows the proxy
 address as preconfigured in the application or can dynamically learn about
 available proxy services. This document describes different discovery mechanisms
